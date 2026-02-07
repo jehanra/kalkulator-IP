@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Indeks Prestasi Semester</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #82B29A;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #82B29A;
+            background-color: #F2F1D3;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #F2F1D3;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-group input {
+            padding: 8px;
+            border: 2px solid #82B29A;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #6A9B82;
+            box-shadow: 0 0 5px rgba(130, 178, 154, 0.5);
+        }
+
+        .button-group {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .button-group button {
+            background-color: #82B29A;
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .button-group button:hover {
+            background-color: #6A9B82;
+        }
+
+        .input-section {
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        .input-section.active {
+            display: block;
+        }
+
+        .input-section h2 {
+            color: #82B29A;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table thead {
+            background-color: #82B29A;
+            color: white;
+        }
+
+        table th,
+        table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            font-weight: bold;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table input {
+            width: 95%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        table input:focus {
+            outline: none;
+            border-color: #82B29A;
+            box-shadow: 0 0 3px rgba(130, 178, 154, 0.5);
+        }
+
+        .hasil-section {
+            display: none;
+        }
+
+        .hasil-section.active {
+            display: block;
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            border: 2px solid #82B29A;
+        }
+
+        .hasil-section h2 {
+            color: #82B29A;
+            margin-bottom: 15px;
+        }
+
+        .hasil-table {
+            font-size: 14px;
+        }
+
+        .hasil-table tbody tr:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Kalkulator Indeks Prestasi Semester</h1>
+
+    <div class="container">
+        <!-- Info Section -->
+        <div class="info-section">
+            <div class="form-group">
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" value="Jihan Rafifa Azzahra">
+            </div>
+            <div class="form-group">
+                <label for="nim">NIM</label>
+                <input type="text" id="nim" value="A11.2025.16457">
+            </div>
+            <div class="form-group">
+                <label for="jumlahmatkul">Jumlah Mata Kuliah</label>
+                <input type="number" id="jumlahmatkul" min="1" max="20" value="3">
+            </div>
+        </div>
+
+        <!-- Button to Process -->
+        <div class="button-group">
+            <button type="button" id="btn-proses">Proses</button>
+        </div>
+
+        <!-- Input Section -->
+        <div class="input-section" id="input-section">
+            <h2>Masukkan Data Mata Kuliah</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mata Kuliah</th>
+                        <th>SKS</th>
+                        <th>Nilai Tugas (20%)</th>
+                        <th>Nilai UTS (40%)</th>
+                        <th>Nilai UAS (40%)</th>
+                    </tr>
+                </thead>
+                <tbody id="matkul-tbody">
+                </tbody>
+            </table>
+
+            <div class="button-group">
+                <button type="button" id="btn-hitung">Hitung Nilai</button>
+            </div>
+        </div>
+
+        <!-- Hasil Section -->
+        <div class="hasil-section" id="hasil-section">
+            <h2>Hasil Perhitungan</h2>
+            <table class="hasil-table">
+                <thead>
+                    <tr>
+                        <th>Mata Kuliah</th>
+                        <th>SKS</th>
+                        <th>Nilai</th>
+                        <th>Huruf</th>
+                        <th>Bobot</th>
+                    </tr>
+                </thead>
+                <tbody id="hasil-tbody">
+                </tbody>
+            </table>
+
+            <div id="ip-summary" style="text-align:right; font-weight:bold; margin-top:10px;">
+                <div>Total SKS: <span id="total-sks">0</span></div>
+                <div>Indeks Prestasi (IP): <span id="ip-value">0.00</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Event ketika tombol Proses diklik
+        document.getElementById('btn-proses').addEventListener('click', function() {
+            const jumlahMatkul = parseInt(document.getElementById('jumlahmatkul').value);
+            const tbody = document.getElementById('matkul-tbody');
+            tbody.innerHTML = '';
+
+            // Buat baris input untuk setiap mata kuliah
+            for (let i = 0; i < jumlahMatkul; i++) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="text" class="matkul-name" placeholder="Nama Mata Kuliah"></td>
+                    <td><input type="number" class="matkul-sks" min="1" max="6" value="2"></td>
+                    <td><input type="number" class="matkul-tugas" min="0" max="100" value="90"></td>
+                    <td><input type="number" class="matkul-uts" min="0" max="100" value="95"></td>
+                    <td><input type="number" class="matkul-uas" min="0" max="100" value="85"></td>
+                `;
+                tbody.appendChild(row);
+            }
+
+            // Tampilkan section input
+            document.getElementById('input-section').classList.add('active');
+            document.getElementById('hasil-section').classList.remove('active');
+        });
+
+        // Bantu fungsi untuk mengubah nilai angka ke huruf dan bobot
+        function getHurufDanBobot(nilai) {
+            if (nilai >= 85) return {huruf: 'A', bobot: 4.0};
+            if (nilai >= 80) return {huruf: 'AB', bobot: 3.5};
+            if (nilai >= 70) return {huruf: 'B', bobot: 3.0};
+            if (nilai >= 65) return {huruf: 'BC', bobot: 2.5};
+            if (nilai >= 60) return {huruf: 'C', bobot: 2.0};
+            if (nilai >= 50) return {huruf: 'D', bobot: 1.0};
+            return {huruf: 'F', bobot: 0.0};
+        }
+
+        // Event ketika tombol Hitung Nilai diklik
+        document.getElementById('btn-hitung').addEventListener('click', function() {
+            const rows = document.querySelectorAll('#matkul-tbody tr');
+            const hasilTbody = document.getElementById('hasil-tbody');
+            hasilTbody.innerHTML = '';
+
+            let totalSks = 0;
+            let totalSksBobot = 0;
+
+            rows.forEach(row => {
+                const nama = row.querySelector('.matkul-name').value || 'Belum diisi';
+                const sks = parseInt(row.querySelector('.matkul-sks').value) || 0;
+                const tugas = parseFloat(row.querySelector('.matkul-tugas').value) || 0;
+                const uts = parseFloat(row.querySelector('.matkul-uts').value) || 0;
+                const uas = parseFloat(row.querySelector('.matkul-uas').value) || 0;
+
+                // Hitung nilai akhir (20% tugas, 40% UTS, 40% UAS)
+                const nilaiAkhir = (tugas * 0.2) + (uts * 0.4) + (uas * 0.4);
+
+                // Dapatkan huruf dan bobot berdasarkan nilai akhir
+                const {huruf, bobot} = getHurufDanBobot(nilaiAkhir);
+
+                // Tambahkan ke akumulasi untuk IP
+                totalSks += sks;
+                totalSksBobot += sks * bobot;
+
+                // Tambahkan ke tabel hasil
+                const hasilRow = document.createElement('tr');
+                hasilRow.innerHTML = `
+                    <td>${nama}</td>
+                    <td>${sks}</td>
+                    <td>${nilaiAkhir.toFixed(2)}</td>
+                    <td>${huruf}</td>
+                    <td>${bobot.toFixed(2)}</td>
+                `;
+                hasilTbody.appendChild(hasilRow);
+            });
+
+            // Hitung IP jika total SKS > 0
+            const ip = totalSks > 0 ? (totalSksBobot / totalSks) : 0;
+
+            document.getElementById('total-sks').textContent = totalSks;
+            document.getElementById('ip-value').textContent = ip.toFixed(2);
+
+            // Tampilkan section hasil
+            document.getElementById('hasil-section').classList.add('active');
+        });
+    </script>
+
+</body>
+</html>
